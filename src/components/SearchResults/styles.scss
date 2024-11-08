@@ -1,0 +1,26 @@
+.search-results-container {
+    background-color: orange;
+    padding: 20px;
+    border-radius: 10px;
+    border: 2px solid black;
+    width: 400px;
+    height: 600px;
+    
+    .album {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 10px;
+
+        .album-name {
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .add-button {
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+    }
+}
