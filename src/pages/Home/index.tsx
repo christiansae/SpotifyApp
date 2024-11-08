@@ -1,38 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import axios, { AxiosResponse } from 'axios';
 import useDebounce from '../../customHooks/debounce';
+import { TrackSearchResponse } from '../../types/TracksInterface';
 import './styles.scss';
 
 // Component imports 
 import SearchBar from '../../components/SearchBar';
-
-// Interfaces
-interface Artist {
-    profile: {
-        name: string;
-    }
-}
-
-interface Album {
-    data: {
-        artists: {
-            items: Artist[];
-        };
-        name: string;
-    };
-}
-
-interface SpotifySearchResponse {
-    albums: {
-        items: Album[];
-    };
-}
+import SearchResults from '../../components/SearchResults';
+import TrackList from '../../components/Tracklist';
 
 const Home = () => {
     const [searchTerm, setSearchTerm] = useState("");
+    const [searchResults, setSearchResults] = useState<TrackSearchResponse | null>(null);
+    const [trackList, setTrackList] = useState<string[]>([]);
     const debouncedSearchTerm = useDebounce(searchTerm, 500);
-    const [searchResults, setSearchResults] = useState<SpotifySearchResponse | null>(null);
-
     useEffect(() => {
         const fetchSearchResults = async () => {
             if (debouncedSearchTerm) {
@@ -51,7 +32,7 @@ const Home = () => {
                   };
 
                 try {
-                    const response: AxiosResponse<SpotifySearchResponse> = await axios.get('https://spotify23.p.rapidapi.com/search/', options);
+                    const response: AxiosResponse<TrackSearchResponse> = await axios.get('https://spotify23.p.rapidapi.com/search/', options);
                     setSearchResults(response.data);
                     console.log(response.data);
                 } catch (error) {
@@ -64,13 +45,20 @@ const Home = () => {
         fetchSearchResults();
     }, [debouncedSearchTerm]);
 
+    const handleAddToPlaylist = (albumName: string) => {
+        if (!trackList.includes(albumName)) {
+            setTrackList([...trackList, albumName]);
+        }
+    };
+
     return (
         <div className="home-container">
             <h1 className="home-title">Spotify App</h1>
             <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-            {searchResults && searchResults.albums.items.length > 0 && (
-                <div>{ searchResults.albums.items.map((album, index) => <p key={index}>{album.data.name}</p>) }</div>
-            )}
+            <div className="main-container">
+                <SearchResults searchResults={searchResults} handleAddToPlaylist={handleAddToPlaylist}/>
+                <TrackList trackList={trackList} />
+            </div>
         </div>
     );  
 };

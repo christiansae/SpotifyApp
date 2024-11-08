@@ -5,4 +5,12 @@
     height: 100vh;
     box-sizing: border-box;
 
+    .main-container {
+        display: flex; 
+        justify-content: space-between;
+        align-items: center;
+        gap: 40px;
+        width: 60%;
+        margin: 0 auto;
+    }
 }
