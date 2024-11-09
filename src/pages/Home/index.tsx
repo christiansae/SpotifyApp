@@ -51,13 +51,19 @@ const Home = () => {
         }
     };
 
+    const handleRemoveFromPlaylist = (albumName: string) => {
+        if (trackList.includes(albumName)){
+            setTrackList(trackList.filter((track) => track !== albumName));
+        }
+    };
+
     return (
         <div className="home-container">
             <h1 className="home-title">Spotify App</h1>
             <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
             <div className="main-container">
                 <SearchResults searchResults={searchResults} handleAddToPlaylist={handleAddToPlaylist}/>
-                <TrackList trackList={trackList} />
+                <TrackList trackList={trackList} handleRemoveFromPlaylist={handleRemoveFromPlaylist} />
             </div>
         </div>
     );  
